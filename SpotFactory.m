@@ -15,6 +15,14 @@ properties
 end
 
 methods
+    function obj = SpotFactory(type)
+        % Create new factory object.
+        
+        if nargin > 0
+            obj.type = type;
+        end
+    end
+    
     %% msspoly constructor
     function varargout = polyvar(~,var,n,m)
         % Return multi-dimensional polynomial variable.
@@ -105,6 +113,8 @@ methods
         switch obj.type
             case 'SOS'
                 sosc = SpotSOSConstraints(x);
+            case 'DSOS'
+                sosc = SpotDSOSConstraints(x);
             otherwise
                 error('%s constraints not supported.', obj.type)
         end
