@@ -41,11 +41,12 @@ methods
         for i=0:m-1
             X{i+1} = msspoly(var,[n i*n]);
         end
+        x = horzcat(X{:});
         
         if nargout > 1
-            varargout = X;
+            varargout = arrayfun(@(c) c, x, 'UniformOutput',false);
         else
-            varargout = {horzcat(X{:})};
+            varargout = {x};
         end
     end
     
