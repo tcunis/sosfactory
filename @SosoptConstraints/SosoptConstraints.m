@@ -112,7 +112,19 @@ methods
     function [sol,min] = goptimize(obj,objective,opts)
         % Quasi-convex optimization.
         
-        [info,dopt] = gsosopt(obj.pcons,obj.x,objective,opts);
+        if nargin < 3
+            opts = gsosoptions;
+        end
+        
+        if ispvar(-objective)
+            % maximization problem
+            objective = -objective;
+            sosc = subs(obj.pcons,objective,-objective);
+        else
+            sosc = obj.pcons;
+        end
+        
+        [info,dopt] = gsosopt(sosc,obj.x,objective,opts);
         
         sol = SosoptSolution(info,dopt);
         
