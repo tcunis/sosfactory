@@ -1,4 +1,4 @@
-classdef SosoptConstraints < AbstractSOSConstraints
+classdef SosoptConstraints < sosfactory.AbstractSOSConstraints
 % SOS constraint class for sosopt toolbox.
 %
 %% About
@@ -104,7 +104,7 @@ methods
         
         [info,dopt] = sosopt(obj.pcons,obj.x,objective,opts);
         
-        sol = SosoptSolution(info,dopt);
+        sol = sosfactory.sosopt.SosoptSolution(info,dopt);
         
         min = info.obj;
     end
@@ -114,7 +114,7 @@ methods
         
         [info,dopt] = gsosopt(obj.pcons,obj.x,objective,opts);
         
-        sol = SosoptSolution(info,dopt);
+        sol = sosfactory.sosopt.SosoptSolution(info,dopt);
         
         min = info.tbnds;
     end

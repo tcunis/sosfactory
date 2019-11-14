@@ -1,4 +1,4 @@
-classdef (Abstract) SpotConstraints < AbstractSOSConstraints
+classdef (Abstract) SpotConstraints < sosfactory.AbstractSOSConstraints
 % Abstract constraint class for SPOT toolbox.
 %
 %% About
@@ -101,7 +101,7 @@ methods
         
         sossol = minimize(obj.prog,objective,@spot_sedumi,opts);
         
-        sol = SpotSolution(sossol);
+        sol = sosfactory.spot.SpotSolution(sossol);
         min = subs(objective,sol);
     end
 end

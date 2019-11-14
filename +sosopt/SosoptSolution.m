@@ -1,17 +1,18 @@
-classdef (InferiorClasses = {?msspoly}) SpotSolution < AbstractSOSSolution
-% Solution of SPOT optimization.
+classdef (InferiorClasses = {?polynomial}) SosoptSolution < sosfactory.AbstractSOSSolution
+% Solution of sosopt optimization.
 %
 %% About
 %
 % * Author:     Torbjoern Cunis
 % * Email:      <mailto:torbjoern.cunis@onera.fr>
-% * Created:    2019-03-29
+% * Created:    2019-03-11
 % * Changed:    2019-03-29
 %
 %%
 
 properties (Access=protected)
-    sol;
+    info;
+    dopt;
 end
 
 properties (Dependent)
@@ -21,39 +22,41 @@ properties (Dependent)
 end
 
 methods
-    function obj = SpotSolution(sol)
-        % Create new SPOT solution object.
+    function obj = SosoptSolution(info,dopt)
+        % Create new sosopt solution object.
         
-        obj.sol = sol;
+        obj.info = info;
+        obj.dopt = dopt;
     end
     
     function sout = subs(s,obj)
         % Substitute solution.
         
-        if obj.feas
-            sout = obj.sol.eval(s);
-        else
-            sout = [];
-        end
+        sout = subs(s,obj.dopt);
     end
     
     %% Getter
     function info = get.solverinfo(obj)
         % Info struct of SDP solver.
         
-        info = obj.sol.info.solverInfo;
+        info = obj.info.sdpsol.solverinfo;
     end
     
     function feas = get.feas(obj)
         % Feasibility flag.
         
-        feas = isDualFeasible(obj.sol);
+        feas = obj.info.feas;
     end
     
     function opt = get.obj(obj)
         % Optimal objective value.
         
-        opt = double(subs(obj.sol.objective,obj));
+        if isfield(obj.info,'tbnds')
+            % Quasi-convex optimal bounds
+            opt = obj.info.tbnds;
+        else
+            opt = obj.info.obj;
+        end
     end
 end
 

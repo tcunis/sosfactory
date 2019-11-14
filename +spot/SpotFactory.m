@@ -1,4 +1,4 @@
-classdef SpotFactory < AbstractSOSFactory
+classdef SpotFactory < sosfactory.AbstractSOSFactory
 % Factory implementation for msspoly and SPOT toolbox.
 %
 %% About
@@ -112,9 +112,9 @@ methods
         
         switch obj.type
             case 'SOS'
-                sosc = SpotSOSConstraints(x);
+                sosc = sosfactory.spot.SpotSOSConstraints(x);
             case 'DSOS'
-                sosc = SpotDSOSConstraints(x);
+                sosc = sosfactory.spot.SpotDSOSConstraints(x);
             otherwise
                 error('%s constraints not supported.', obj.type)
         end

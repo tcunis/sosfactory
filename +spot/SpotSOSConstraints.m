@@ -1,4 +1,4 @@
-classdef SpotDSOSConstraints < SpotConstraints
+classdef SpotSOSConstraints < sosfactory.spot.SpotConstraints
 % SOS constraint class for SPOT toolbox.
 %
 %% About
@@ -12,21 +12,21 @@ classdef SpotDSOSConstraints < SpotConstraints
 
 methods
     %% Constructors
-    function obj = SpotDSOSConstraints(varargin)
+    function obj = SpotSOSConstraints(varargin)
         % Create new SOS constraint object.
-        obj@SpotConstraints(varargin{:});
+        obj@sosfactory.spot.SpotConstraints(varargin{:});
     end
     
     function sosc = clone(obj)
         % Clone SOS constraint object.
         
-        sosc = SpotDSOSConstraints(obj);
+        sosc = sosfactory.spot.SpotSOSConstraints(obj);
     end
     
     function q = symdecvar(obj,n)
         % Return symmetric n-by-n matrix of decision variables.
         
-        [obj.prog,q] = newDD(obj.prog,n);
+        [obj.prog,q] = newPSD(obj.prog,n);
     end
     
     function p = sosdecvar(obj,z)
@@ -42,10 +42,10 @@ methods
         
         if ~isFunctionOfX(obj,a-b)
             % scalar non-positivity
-            obj.le@SpotConstraints(a,b);
+            obj.le@sosfactory.spot.SpotConstraints(a,b);
         else
             % polynomial non-positivity
-            obj.prog = withDSOS(obj.prog,b-a);
+            obj.prog = withSOS(obj.prog,b-a);
         end
     end
     
@@ -54,29 +54,12 @@ methods
         
         if ~isFunctionOfX(obj,a-b)
             % scalar non-negativity
-            obj.ge@SpotConstraints(a,b);
+            obj.ge@sosfactory.spot.SpotConstraints(a,b);
         else
             % polynomial non-negativity
-            obj.prog = withDSOS(obj.prog,a-b);
+            obj.prog = withSOS(obj.prog,a-b);
         end
-    end   
-    
-    %% Optimization
-    function [sol,min] = optimize(obj,objective,opts)
-        % Override SpotConstraints.optimize
-        
-        if nargin < 2 || isempty(objective)
-            objective = msspoly(1);
-        end
-        if nargin < 3
-            opts = obj.prog.defaultOptions;
-        end
-        
-        sossol = minimizeDSOS(obj.prog,objective,@spot_sedumi,opts);
-        
-        sol = SpotSolution(sossol);
-        min = subs(objective,sol);
-    end
+    end    
 end
 
 end

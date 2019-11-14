@@ -1,4 +1,4 @@
-classdef SosoptFactory < AbstractSOSFactory
+classdef SosoptFactory < sosfactory.AbstractSOSFactory
 % Factory implementation for multipoly and sosopt toolbox.
 %
 %% About
@@ -78,7 +78,7 @@ methods
     function sosc = newconstraints(~,x)
         % Return SOS constraint object.
         
-        sosc = SosoptConstraints(x);
+        sosc = sosfactory.sosopt.SosoptConstraints(x);
     end
     
     function sopt = newoptions(~,varargin)
