@@ -23,38 +23,38 @@ methods
         sosc = sosfactory.spot.SpotSOSConstraints(obj);
     end
     
-    function q = symdecvar(obj,n)
+    function [obj,q] = symdecvar(obj,n)
         % Return symmetric n-by-n matrix of decision variables.
         
         [obj.prog,q] = newPSD(obj.prog,n);
     end
     
-    function p = sosdecvar(obj,z)
+    function [obj,p] = sosdecvar(obj,z)
         % Return SOS decision variable.
         
-        Q = symdecvar(obj,length(z));
+        [obj,Q] = symdecvar(obj,length(z));
         p = z'*Q*z;
     end
     
     %% SOS Constraints
-    function le(obj,a,b)
+    function obj = le(obj,a,b)
         % Add non-positivity constraint a <= b.
         
         if ~isFunctionOfX(obj,a-b)
             % scalar non-positivity
-            obj.le@sosfactory.spot.SpotConstraints(a,b);
+            obj = obj.le@sosfactory.spot.SpotConstraints(a,b);
         else
             % polynomial non-positivity
             obj.prog = withSOS(obj.prog,b-a);
         end
     end
     
-    function ge(obj,a,b)
+    function obj = ge(obj,a,b)
         % Add non-negativity constraint a <= b.
         
         if ~isFunctionOfX(obj,a-b)
             % scalar non-negativity
-            obj.ge@sosfactory.spot.SpotConstraints(a,b);
+            obj = obj.ge@sosfactory.spot.SpotConstraints(a,b);
         else
             % polynomial non-negativity
             obj.prog = withSOS(obj.prog,a-b);

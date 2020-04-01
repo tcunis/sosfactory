@@ -44,51 +44,52 @@ methods
     end
     
     %% Decision variables
-    function a = decvar(obj,n,m)
+    function [obj,a] = decvar(obj,n,m)
         % Return n-by-m matrix of decision variables.
         
         if nargin < 3
-            m = n;
+            m = n(end);
+            n = n(1);
         end
         
-        a = sosoptdecvar(obj,@mpvar,n,m);
+        [obj,a] = sosoptdecvar(obj,@mpvar,n,m);
     end
     
-    function q = symdecvar(obj,n)
+    function [obj,q] = symdecvar(obj,n)
         % Return symmetric n-by-n matrix of decision variables.
         
-        q = sosoptdecvar(obj,@mpvar,n,n,'s');
+        [obj,q] = sosoptdecvar(obj,@mpvar,n,n,'s');
     end
     
-    function p = polydecvar(obj,w)
+    function [obj,p] = polydecvar(obj,w)
         % Return polynomial decision variable.
         
-        p = sosoptdecvar(obj,@polydecvar,w);
+        [obj,p] = sosoptdecvar(obj,@polydecvar,w);
     end
     
-    function s = sosdecvar(obj,z)
+    function [obj,s] = sosdecvar(obj,z)
         % Return SOS decision variable.
         
-        s = sosoptdecvar(obj,@sosdecvar,z);
+        [obj,s] = sosoptdecvar(obj,@sosdecvar,z);
     end
     
     %% SOS Constraints
-    function eq(obj,a,b)
+    function obj = eq(obj,a,b)
         % Add equality constraint a == b.
         
-        addconstraint(obj,@eq,a,b);
+        obj = addconstraint(obj,@eq,a,b);
     end
     
-    function le(obj,a,b)
+    function obj = le(obj,a,b)
         % Add non-positivity constraint a <= b.
         
-        addconstraint(obj,@le,a,b);
+        obj = addconstraint(obj,@le,a,b);
     end
     
-    function ge(obj,a,b)
+    function obj = ge(obj,a,b)
         % Add non-negativity constraint a >= b.
         
-        addconstraint(obj,@ge,a,b);
+        obj = addconstraint(obj,@ge,a,b);
     end
     
     %% Optimization
@@ -140,7 +141,7 @@ methods
 end
    
 methods (Access=private)
-    function addconstraint(obj,cmp,a,b)
+    function obj = addconstraint(obj,cmp,a,b)
         % Add constraint cmp(a,b).
         
         sosc = cmp(a,b);
@@ -148,7 +149,7 @@ methods (Access=private)
         obj.pcons = vertcat(obj.pcons, sosc);
     end
     
-    function v = sosoptdecvar(obj,type,varargin)
+    function [obj,v] = sosoptdecvar(obj,type,varargin)
         % Return generic sosopt decision variable.
     
         cstr = [obj.prefix num2str(obj.ndvars)];

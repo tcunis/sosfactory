@@ -1,4 +1,4 @@
-classdef (Abstract) AbstractSOSConstraints < handle
+classdef (Abstract) AbstractSOSConstraints
 % Abstract class for SOS constraints.
 %
 %% About
@@ -15,17 +15,18 @@ methods (Abstract)
     sosc = clone(obj);
     
     %% Decision variables
-    a = decvar(obj,n,m);
-    q = symdecvar(obj,n);
-    p = polydecvar(obj,w);
-    s = sosdecvar(obj,z);
+    [sosc,a] = decvar(obj,n,m);
+    [sosc,q] = symdecvar(obj,n);
+    [sosc,p] = polydecvar(obj,w);
+    [sosc,s] = sosdecvar(obj,z);
     
-    s = sosmdecvar(obj,z,k);
+    [sosc,p] = polymdecvar(obj,w,n,m);
+    [sosc,s] = sosmdecvar(obj,z,n,m);
     
     %% Fabric constraints
-    eq(obj,a,b);
-    le(obj,a,b);
-    ge(obj,a,b);
+    sosc = eq(obj,a,b);
+    sosc = le(obj,a,b);
+    sosc = ge(obj,a,b);
     
     %% Optimization
     sol = optimize(obj,objective,opts);

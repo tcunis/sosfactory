@@ -32,24 +32,25 @@ methods
     end
     
     %% Decision variables
-    function a = decvar(obj,n,m)
+    function [obj,a] = decvar(obj,n,m)
         % Return n-by-m matrix of decision variables.
         
         if nargin < 3
-            m = n;
+            m = n(2);
+            n = n(1);
         end
         
         [obj.prog,a] = newFree(obj.prog,n,m);
     end
     
-    function p = polydecvar(obj,w)
+    function [obj,p] = polydecvar(obj,w)
         % Return polynomial decision variable.
         
         [obj.prog,p] = newFreePoly(obj.prog,w);
     end
     
     %% SOS Constraints
-    function eq(obj,a,b)
+    function obj = eq(obj,a,b)
         % Add equality constraint a == b.
         
         if isFunctionOfX(obj,a-b)
@@ -64,7 +65,7 @@ methods
         end
     end
     
-    function le(obj,a,b)
+    function obj = le(obj,a,b)
         % Add non-positivity constraint a <= b.
         
         if isFunctionOfX(obj,a-b)
@@ -76,7 +77,7 @@ methods
         end
     end
     
-    function ge(obj,a,b)
+    function obj = ge(obj,a,b)
         % Add non-negativity constraint a >= b.
         
         if isFunctionOfX(obj,a-b)
