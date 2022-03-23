@@ -65,7 +65,7 @@ methods
     function J = jacob(~,f,x)
         % Compute Jacobian matrix of f w.r.t. x.
         
-        J = jacobian(f,x);
+        J = jacobian(polynomial(f),x);
     end
     
     function p = cleanp(~,p,varargin)
