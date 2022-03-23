@@ -19,6 +19,9 @@ properties (Dependent)
     solverinfo;
     feas;
     obj;
+    
+    primal;
+    dual;
 end
 
 methods
@@ -57,6 +60,16 @@ methods
         else
             opt = obj.info.obj;
         end
+    end
+    
+    function vars = get.primal(obj)
+        % Primal decision variables.
+        vars = obj.info.sdpsol.x;
+    end
+    
+    function vars = get.dual(obj)
+        % Dual decision variables.
+        vars = obj.info.sdpsol.y;
     end
 end
 

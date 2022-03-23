@@ -138,6 +138,11 @@ methods
         varargout = cell(1,max(1,nargout));
         [varargout{:}] = size(obj.pcons,varargin{:});
     end
+    
+    function obj = subs(obj,varargin)
+        % Substitute variables.
+        obj.pcons = subs(obj.pcons,varargin{:});
+    end
 end
    
 methods (Access=private)
