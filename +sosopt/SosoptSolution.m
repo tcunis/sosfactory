@@ -22,6 +22,10 @@ properties (Dependent)
     
     primal;
     dual;
+    
+    % debug
+    sizeLMI;
+    subiter;
 end
 
 methods
@@ -70,6 +74,20 @@ methods
     function vars = get.dual(obj)
         % Dual decision variables.
         vars = obj.info.sdpsol.y;
+    end
+    
+    function sz = get.sizeLMI(obj)
+        % Size of generated LMI.
+        sz = [length(obj.dual) length(obj.primal)];
+    end
+    
+    function it = get.subiter(obj)
+        % Number of subiterations (bisection).
+        if isfield(obj.info,'iter')
+            it = obj.info.iter;
+        else
+            it = [];
+        end
     end
 end
 
