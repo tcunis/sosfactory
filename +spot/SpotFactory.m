@@ -87,7 +87,7 @@ methods
     function J = jacob(~,f,x)
         % Compute Jacobian matrix of f w.r.t. x.
         
-        J = diff(f,x);
+        J = diff(msspoly(f),x);
     end
     
     function a = cleanp(~,a,tol,deg)

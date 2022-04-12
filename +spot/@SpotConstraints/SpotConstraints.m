@@ -112,7 +112,7 @@ methods (Access=protected)
         % Checks whether p is a function of the indeterminates.
         [~,~,M] = decomp(p,obj.prog.indeterminates);
         
-        tf = ~isdouble(M);
+        tf = ~isnumeric(M);
     end
 end
         

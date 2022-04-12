@@ -18,6 +18,12 @@ properties (Dependent)
     solverinfo;
     feas;
     obj;
+    
+    primal;
+    dual;
+    
+    % debug
+    sizeLMI;
 end
 
 methods
@@ -54,6 +60,21 @@ methods
         % Optimal objective value.
         
         opt = double(subs(obj.sol.objective,obj));
+    end
+    
+    function vars = get.primal(obj)
+        % Primal decision variables.
+        vars = obj.sol.x;
+    end
+    
+    function vars = get.dual(obj)
+        % Dual decision variables.
+        vars = obj.sol.y;
+    end
+    
+    function sz = get.sizeLMI(obj)
+        % Size of generated LMI.
+        sz = [length(obj.dual) length(obj.primal)];
     end
 end
 
