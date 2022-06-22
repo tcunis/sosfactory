@@ -18,8 +18,8 @@ import sosfactory.spot.*
 % All you need to do to switch between sosopt and SPOT is to toggle the
 % following two lines!
 
-sosf = SosoptFactory;   % toggle comment for sosopt
-% sosf = SpotFactory;     % toggle comment for SPOT
+% sosf = SosoptFactory;   % toggle comment for sosopt
+sosf = SpotFactory;     % toggle comment for SPOT
 
 x0 = 1;
 y0 = 1;
@@ -34,11 +34,11 @@ C = x^3 - 8*x - 2*y;
 % a lower bound G <= r^2 can be computed as sum-of-squares problem [Par03].
 sosc1 = newconstraints(sosf,[x;y]);
 
-G = decvar(sosc1,1,1);       % scalar decision variable
-f = polydecvar(sosc1,[1;x]); % polynomial decision variable f = a + b*x
+[sosc1,G] = decvar(sosc1,1,1);       % scalar decision variable
+[sosc1,f] = polydecvar(sosc1,[1;x]); % polynomial decision variable f = a + b*x
 
-sosc1.ge(P - G + f*C, 0);
-sosc1.ge(G, 0);
+sosc1 = sosc1.ge(P - G + f*C, 0);
+sosc1 = sosc1.ge(G, 0);
 
 sol1 = optimize(sosc1, -G);  % we want to find max G
 
