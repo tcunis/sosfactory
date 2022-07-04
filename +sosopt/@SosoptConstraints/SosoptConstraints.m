@@ -12,11 +12,15 @@ classdef SosoptConstraints < sosfactory.AbstractSOSConstraints
 
 properties (Access=protected)
     prefix = 'SOSCprefix';
-    ndvars = 0;
     
+    dvars = {};
     pcons = polyconstr;
     
     x;
+end
+
+properties (Dependent)
+    ndvars;
 end
 
 methods
@@ -26,9 +30,9 @@ methods
         
         if isa(argin, 'SosoptConstraints')
             % clone
-            obj.ndvars = argin.ndvars;
-            obj.pcons  = argin.pcons;
-            obj.x      = argin.x;
+            obj.dvars = argin.dvars;
+            obj.pcons = argin.pcons;
+            obj.x     = argin.x;
         elseif ispvar(argin)
             % new
             obj.x = argin;
@@ -103,9 +107,10 @@ methods
             opts = sosoptions;
         end
         
+        pvar = vertcat(obj.dvars{:});
         [info,dopt] = sosopt(obj.pcons,obj.x,objective,opts);
         
-        sol = sosfactory.sosopt.SosoptSolution(info,dopt);
+        sol = sosfactory.sosopt.SosoptSolution(info,dopt,pvar);
         
         min = info.obj;
     end
@@ -125,9 +130,10 @@ methods
             sosc = obj.pcons;
         end
         
+        pvar = vertcat(obj.dvars{:});
         [info,dopt] = gsosopt(sosc,obj.x,objective,opts);
         
-        sol = sosfactory.sosopt.SosoptSolution(info,dopt);
+        sol = sosfactory.sosopt.SosoptSolution(info,dopt,pvar);
         
         min = info.tbnds;
     end
@@ -142,6 +148,11 @@ methods
     function obj = subs(obj,varargin)
         % Substitute variables.
         obj.pcons = subs(obj.pcons,varargin{:});
+    end
+    
+    function n = get.ndvars(obj)
+        % Number of polynomial decision variables.
+        n = length(obj.dvars);
     end
 end
    
@@ -161,7 +172,7 @@ methods (Access=private)
         
         v = feval(type,cstr,varargin{:});
         
-        obj.ndvars = obj.ndvars + 1;
+        obj.dvars(end+1) = {v(:)};
     end
 end
 

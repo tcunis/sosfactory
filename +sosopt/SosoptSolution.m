@@ -13,6 +13,7 @@ classdef (InferiorClasses = {?polynomial}) SosoptSolution < sosfactory.AbstractS
 properties (Access=protected)
     info;
     dopt;
+    pvar;
 end
 
 properties (Dependent)
@@ -29,11 +30,12 @@ properties (Dependent)
 end
 
 methods
-    function obj = SosoptSolution(info,dopt)
+    function obj = SosoptSolution(info,dopt,pvar)
         % Create new sosopt solution object.
         
         obj.info = info;
         obj.dopt = dopt;
+        obj.pvar = pvar;
     end
     
     function sout = subs(s,obj)
@@ -68,12 +70,14 @@ methods
     
     function vars = get.primal(obj)
         % Primal decision variables.
-        vars = obj.info.sdpsol.x;
+        vars = subs(obj.pvar,obj);
+%         vars = obj.info.sdpsol.x;
     end
     
     function vars = get.dual(obj)
         % Dual decision variables.
-        vars = obj.info.sdpsol.y;
+        vars = obj.info.duals;
+%         vars = obj.info.sdpsol.y;
     end
     
     function sz = get.sizeLMI(obj)
