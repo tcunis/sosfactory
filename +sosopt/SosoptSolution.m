@@ -82,7 +82,7 @@ methods
     
     function sz = get.sizeLMI(obj)
         % Size of generated LMI.
-        sz = [length(obj.dual) length(obj.primal)];
+        sz = size(obj.info.sdpdata.A);
     end
     
     function it = get.subiter(obj)
